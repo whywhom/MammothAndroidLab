@@ -7,7 +7,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
 @Composable
-fun RadioAppScreen(onBack: () -> Unit) {
+fun RadioAppScreen(
+    onBack: () -> Unit = {}
+) {
     Box(modifier = Modifier.fillMaxSize()) {
         MaterialTheme {
             MammothRadio(onBack = onBack)

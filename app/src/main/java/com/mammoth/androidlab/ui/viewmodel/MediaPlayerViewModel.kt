@@ -5,21 +5,8 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.mammoth.androidlab.data.RadioStation
-import com.mammoth.androidlab.repository.remote.RadioService
-import com.mammoth.androidlab.util.getCurrentCountryCode
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import androidx.lifecycle.viewModelScope
 import androidx.media3.common.Player
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import com.mammoth.androidlab.data.RadioCountry
 import com.mammoth.androidlab.media.RadioPlayer
-import com.mammoth.androidlab.repository.local.DataStoreManager
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import java.util.Locale
 
 @SuppressLint("StaticFieldLeak")
 class MediaPlayerViewModel(

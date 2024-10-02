@@ -1,6 +1,5 @@
 package com.mammoth.androidlab.ui
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,9 +23,9 @@ fun HomeScreen(
     Scaffold(
         topBar = {
             RadioAppToolbar(
+                feature = Features.HOME,
                 title = "Radio App",
-                onBackClick = {},
-                onSearchClick = {}
+                navController = navController,
             )
         },
         bottomBar = {

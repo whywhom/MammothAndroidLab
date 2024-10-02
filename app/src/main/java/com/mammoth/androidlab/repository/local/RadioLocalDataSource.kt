@@ -4,9 +4,9 @@ import android.content.Context
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 
 val Context.dataStore by preferencesDataStore("app_preferences")
 
@@ -15,7 +15,7 @@ enum class StorageType{
     PrimitiveStorage
 }
 
-object DataStoreManager {
+object RadioLocalDataSource {
     private val inMemoryMap: MutableMap<String, Any> = HashMap()
 
     private val COUNTRY_KEY = stringPreferencesKey("countries")
@@ -34,18 +34,21 @@ object DataStoreManager {
         }
     }
 
-    fun getCountries(context: Context, storageType: StorageType = StorageType.InMemoryStorage): Flow<Any?> {
-        return when (storageType) {
-            StorageType.InMemoryStorage -> {
-                flow {
-                    emit(inMemoryMap[COUNTRY_KEY.toString()])
+    suspend fun getCountries(context: Context, storageType: StorageType = StorageType.InMemoryStorage): String? {
+        return withContext(Dispatchers.IO) {
+            var result: String? = null
+            when (storageType) {
+                StorageType.InMemoryStorage -> {
+                    result = (inMemoryMap[COUNTRY_KEY.toString()]) as String?
+                }
+
+                StorageType.PrimitiveStorage -> {
+                    context.dataStore.data.map { preferences ->
+                        result = preferences[COUNTRY_KEY]
+                    }
                 }
             }
-            StorageType.PrimitiveStorage -> {
-                context.dataStore.data.map { preferences ->
-                    preferences[COUNTRY_KEY]
-                }
-            }
+            result
         }
     }
 
@@ -62,18 +65,22 @@ object DataStoreManager {
         }
     }
 
-    fun getCurrentCountry(context: Context, storageType: StorageType = StorageType.PrimitiveStorage,): Flow<Any?> {
-        return when (storageType) {
-            StorageType.InMemoryStorage -> {
-                flow {
-                    emit(inMemoryMap[CURRENT_COUNTRY_KEY.toString()])
+    suspend fun getCurrentCountry(context: Context, storageType: StorageType = StorageType.PrimitiveStorage,): String? {
+        return withContext(Dispatchers.IO) {
+            var result: String? = null
+            when (storageType) {
+                StorageType.InMemoryStorage -> {
+                    result = (inMemoryMap[CURRENT_COUNTRY_KEY.toString()]) as String
+
+                }
+                StorageType.PrimitiveStorage -> {
+                    context.dataStore.data.map { preferences ->
+                        result = preferences[CURRENT_COUNTRY_KEY]
+                    }
                 }
             }
-            StorageType.PrimitiveStorage -> {
-                context.dataStore.data.map { preferences ->
-                    preferences[CURRENT_COUNTRY_KEY]
-                }
-            }
+            result
         }
+
     }
 }

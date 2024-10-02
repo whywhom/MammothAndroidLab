@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.compose.compiler)
     kotlin("plugin.serialization") version "2.0.20"
+    id("com.google.devtools.ksp")
+    id("androidx.room")
 }
 
 android {
@@ -40,6 +42,9 @@ android {
         buildConfig = true
         compose = true
     }
+    room {
+        schemaDirectory("$projectDir/schemas")
+    }
 }
 
 dependencies {
@@ -67,6 +72,13 @@ dependencies {
     implementation(libs.gson)
 
     implementation(libs.coil.compose)
+
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+    annotationProcessor(libs.androidx.room.compiler)
+
+    // optional - Kotlin Extensions and Coroutines support for Room
+    implementation(libs.androidx.room.ktx)
 
     // Media3
     implementation(libs.androidx.media3.common)

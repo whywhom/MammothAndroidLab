@@ -8,6 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.mammoth.androidlab.data.RadioStation
 import com.mammoth.androidlab.media.RadioPlayer
+import com.mammoth.androidlab.ui.viewmodel.CountryListViewModel
 import com.mammoth.androidlab.util.NavPath.countryList
 import com.mammoth.androidlab.util.NavPath.radio
 import com.mammoth.androidlab.ui.viewmodel.MediaPlayerViewModel
@@ -15,13 +16,18 @@ import com.mammoth.androidlab.ui.viewmodel.RadioViewModel
 import com.mammoth.androidlab.util.NavPath.favorites
 import com.mammoth.androidlab.util.NavPath.home
 
+enum class Features(val value: String) {
+    HOME("Home"),
+    FAVORITIES("Favorities"),
+    RADIO("Radio"),
+    COUNTRYLIST("CountryList"),
+    STATIONList("StationList")
+}
+
 @Composable
 fun MammothRadio(onBack: () -> Unit) {
     val context = LocalContext.current
     val navController = rememberNavController()
-    val radioViewModel = RadioViewModel(
-        context = context
-    )
     val mediaPlayerViewModel = MediaPlayerViewModel(
         context = context,
         radioPlayer = RadioPlayer(context)
@@ -41,14 +47,18 @@ fun MammothRadio(onBack: () -> Unit) {
         }
         composable(radio) {
             RadioScreen(
-                viewModel = radioViewModel,
+                viewModel = RadioViewModel(
+                    context = context
+                ),
                 navController = navController,
                 onBack = onBack
             )
         }
         composable(countryList) {
             CountryListScreen(
-                viewModel = radioViewModel,
+                viewModel = CountryListViewModel(
+                    context = context
+                ),
                 navController = navController
             )
         }
